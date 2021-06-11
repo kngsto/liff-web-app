@@ -5,6 +5,7 @@
   </div>
   <router-view/>
   <h1>isLoggedIn is {{ isLoggedIn }}</h1>
+  <h1>Welcome {{ userName }} !</h1>
 </template>
 
 <style>
@@ -17,7 +18,8 @@ import liff from '@line/liff';
 export default {
   data() {
     return {
-      isLoggedIn: true
+      isLoggedIn: true,
+      userName: 'unknown'
     }
   },
 
@@ -31,6 +33,23 @@ export default {
           console.log('init success');
           this.isLoggedIn = liff.isLoggedIn();
           console.log(this.isLoggedIn);
+
+          if(!liff.isLoggedIn()) {
+            liff.login();
+          }
+
+          liff
+            .getProfile()
+            .then(profile => {
+              this.userName = profile.displayName
+              console.log(this.userName);
+            })
+            .catch((err) => {
+              console.log('getProfile error', err)
+            })
+          
+          const idToken = liff.getDecodedIDToken();
+          console.log(idToken); // print decoded idToken object
       })
       .catch((err) => {
         console.log('init failed', err);
