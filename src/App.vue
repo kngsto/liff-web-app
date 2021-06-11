@@ -4,27 +4,30 @@
     <router-link to="/about">About</router-link>
   </div>
   <router-view/>
+  <h1>logedIn is {{ loginStatus }}</h1>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+@import "./assets/styles.css";
 </style>
+
+<script>
+import liff from '@line/liff';
+
+export default {
+  loggedIn : true,
+
+  props: {
+    loginStatus: Boolean
+  },
+
+  created () {
+    liff.init({
+      liffId: '1656094959-d5AOBmLz'
+    })
+    .then(() => {
+      this.loggedIn = liff.isLoggedIn();
+    })
+  },
+}
+</script>
