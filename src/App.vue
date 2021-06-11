@@ -4,13 +4,9 @@
     <router-link to="/about">About</router-link>
   </div>
   <router-view/>
-  <h1>isLoggedIn is {{ isLoggedIn }}</h1>
-  <h1>Welcome {{ userName }} !</h1>
+  <h1>Welcome {{ displayName }} [{{ userId }}] !</h1>
+  <img alt=pictureUrl src=require(pictureUrl)>
 </template>
-
-<style>
-@import './assets/styles.css';
-</style>
 
 <script>
 import liff from '@line/liff';
@@ -19,43 +15,49 @@ export default {
   data() {
     return {
       isLoggedIn: true,
-      userName: 'unknown'
+      displayName: 'unknown',
+      userId: 'unknown',
+      pictureUrl: 'unknown',
     }
   },
 
   mounted() {
-    console.log('mounted start');
-    console.log(this.isLoggedIn);
+    console.log('liff init...');
     
     liff
       .init({ liffId: '1656094959-d5AOBmLz' })
       .then(() => {
-          console.log('init success');
+          console.log('liff init success.');
           this.isLoggedIn = liff.isLoggedIn();
-          console.log(this.isLoggedIn);
 
           if(!liff.isLoggedIn()) {
+            console.log('liff requires to login.');
             liff.login();
           }
 
+          console.log('getProfile...');
           liff
             .getProfile()
             .then(profile => {
-              this.userName = profile.displayName
-              console.log(this.userName);
+              console.log('getProfile success.');
+              this.displayName = profile.displayName;
+              this.userId = profile.userId;
+              this.pictureUrl = profile.pictureUrl;
             })
             .catch((err) => {
               console.log('getProfile error', err)
             })
-          
-          const idToken = liff.getDecodedIDToken();
-          console.log(idToken); // print decoded idToken object
       })
       .catch((err) => {
-        console.log('init failed', err);
+        console.log('liff init error.', err);
+      })
+      .finally(() => {
+        console.log('liff init finally end');
       });
-
-    console.log('mounted end');
   }
 }
 </script>
+
+<style>
+@import './assets/styles.css';
+</style>
