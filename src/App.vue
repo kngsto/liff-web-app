@@ -121,8 +121,8 @@ export default {
 }
 
 .meow-picture {
-  width: 140px;
-  height: 140px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   background-position: center center;
   background-size: cover;
